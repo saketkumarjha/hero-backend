@@ -1,8 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
-import cv2
-import numpy as np
 import base64
 import requests
 import os
@@ -36,6 +33,8 @@ def home():
 # ==========================================
 def agent1_quality_gate(image_np):
     """Checks for blur and applies CLAHE enhancement."""
+    import cv2
+    
     # Convert to grayscale for variance calculation
     gray = cv2.cvtColor(image_np, cv2.COLOR_BGR2GRAY)
     
@@ -59,6 +58,9 @@ def agent1_quality_gate(image_np):
 # ==========================================
 @app.post("/api/analyze")
 async def analyze_vehicle(file: UploadFile = File(...)):
+    import cv2
+    import numpy as np
+    
     # 1. Read the uploaded image into memory
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
