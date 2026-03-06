@@ -25,6 +25,13 @@ app.add_middleware(
 )
 
 # ==========================================
+# HOME ENDPOINT
+# ==========================================
+@app.get("/")
+def home():
+    return {"message": "Hero Backend Running 🚀"}
+
+# ==========================================
 # AGENT 1: OpenCV PREPROCESSING (Pure Python)
 # ==========================================
 def agent1_quality_gate(image_np):
@@ -97,7 +104,3 @@ async def analyze_vehicle(file: UploadFile = File(...)):
         if response.text:
             print(f"Details: {response.text}")
         raise HTTPException(status_code=500, detail="Error communicating with Roboflow.")
-
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
