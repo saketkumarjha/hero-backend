@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 import base64
 import requests
 import os
@@ -22,11 +23,11 @@ app.add_middleware(
 )
 
 # ==========================================
-# HOME ENDPOINT
+# HEALTH CHECK ENDPOINT
 # ==========================================
 @app.get("/")
-def home():
-    return {"message": "Hero Backend Running 🚀"}
+def health():
+    return JSONResponse({"status": "healthy", "message": "Hero Backend Running 🚀"})
 
 # ==========================================
 # AGENT 1: OpenCV PREPROCESSING (Pure Python)
