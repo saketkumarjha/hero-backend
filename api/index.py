@@ -93,9 +93,40 @@ async def analyze_vehicle(file: UploadFile = File(...)):
     
     try:
         print("Agent 1 Pass. Sending Enhanced Image to Roboflow...")
-        response = requests.post(ROBOFLOW_WORKFLOW_URL, json=payload)
-        response.raise_for_status() # Check for HTTP errors
-        roboflow_data = response.json()
+        
+        # For testing without API key: return mock Roboflow data
+        if not ROBOFLOW_API_KEY or ROBOFLOW_API_KEY.strip() == "":
+            print("⚠️ No ROBOFLOW_API_KEY set. Using mock response for testing...")
+            roboflow_data = [
+                {
+                    "car_damage_results": {
+                        "image": {"width": 240, "height": 180},
+                        "predictions": [
+                            {
+                                "width": 68, "height": 113, "x": 34, "y": 58.5,
+                                "confidence": 0.65, "class_id": 0, "class": "car damage"
+                            },
+                            {
+                                "width": 230, "height": 159, "x": 119, "y": 100.5,
+                                "confidence": 0.56, "class_id": 0, "class": "car damage"
+                            }
+                        ]
+                    },
+                    "vehicle_type": {
+                        "image": {"width": 240, "height": 180},
+                        "predictions": [
+                            {"class": "Car", "class_id": 14, "confidence": 0.85},
+                            {"class": "Motorcycle", "class_id": 12, "confidence": 0.10}
+                        ],
+                        "top": "Car",
+                        "confidence": 0.85
+                    }
+                }
+            ]
+        else:
+            response = requests.post(ROBOFLOW_WORKFLOW_URL, json=payload)
+            response.raise_for_status() # Check for HTTP errors
+            roboflow_data = response.json()
         
         return {
             "status": "Pass",
